@@ -9,7 +9,20 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
+/**
+ * Esta es la clase principal del programa la cual ejecuta 2 tareas de Quartz, una de ellas a las 11 de la noche y la otra cada 40 min
+ * @author: Daniel García Velasco y Abimael Rueda Galindo
+ * @version: 9/07/2021
+ *
+ */
+
 public class QuartzMain {
+	
+	/**
+	 * Metodo main de la clase
+	 * @param args
+	 * @throws SchedulerException
+	 */
 
 	public static void main(String[] args) throws SchedulerException {
 		JobDetail job=JobBuilder.newJob(QuartzJob.class).build();
@@ -24,6 +37,6 @@ public class QuartzMain {
 		Scheduler sc2=StdSchedulerFactory.getDefaultScheduler();
 		sc2.start();
 		sc2.scheduleJob(job2,t2);
-	}
+	}// fin del metodo
 
 }

@@ -14,7 +14,19 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+/**
+ * Esta clase se conecta con el web service de alpha y extrae informacion de todos los pedidos de los clientes uno por uno y guarda esta informacion en una base de datos por medio de otro web service
+ * En caso de error genera un JobExecutionException
+ * @author: Daniel García Velasco y Abimael Rueda Galindo
+ * @version: 9/07/2021
+ */
+
+
 public class QuartzJob2 implements Job {
+	
+	/**
+	 * Este metodo almacena en un JSONObject la respuesta del web service y este JSONObject es enviado al otro web service para ser almacenado
+	 */
 	@Override
 	synchronized public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		String query="http://192.168.20.26/ServiciosClubAlpha/api/Pagos/GetPedidoById";
@@ -123,5 +135,5 @@ public class QuartzJob2 implements Job {
 		}
 		System.out.println("Fin");
 		
-	}
-}
+	}//cierre de metodo
+}//cierre de clase
