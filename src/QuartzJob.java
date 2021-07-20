@@ -30,8 +30,35 @@ public class QuartzJob implements Job {
 	@Override
 	synchronized public void execute(JobExecutionContext arg0) throws JobExecutionException {
 			try {
+				
+				JSONObject usuario=new JSONObject();
+				usuario.put("email","bloodgigametal@gmail.com");
+				usuario.put("nombre","daniel");
+				usuario.put("nombreUsuario","daniel2474");
+				usuario.put("password","farmacia123");
+				
+				String query="Http://localhost:8080/auth/login";
+				URL url = new URL(query);
+			    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			    conn.setConnectTimeout(5000);
+			    conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+			    conn.setDoOutput(true);
+			    conn.setDoInput(true);
+			    conn.setRequestMethod("POST");
+
+			    OutputStream os = conn.getOutputStream();
+			    os.write(usuario.toString().getBytes("UTF-8"));
+			    os.close();
+
+			    // read the response
+			    InputStream in = new BufferedInputStream(conn.getInputStream());
+			    String result = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
+			    JSONObject usuarioLog = new JSONObject(result);
+	            in.close();
+	            conn.disconnect();
+				
 				JSONObject json = new JSONObject(IOUtils.toString(new URL("http://192.168.20.26/ServiciosClubAlpha/api/Miembro/1"), Charset.forName("UTF-8")));
-				//JSONObject json = new JSONObject(IOUtils.toString(new URL("https://945ffdb6-b172-4318-9a81-447b460a7a1c.mock.pstmn.io/ServiciosClubAlpha/api/Miembro/11184"), Charset.forName("UTF-8")));
+				//JSONObject json = new JSONObject(IOUtils.toString(new URL("https://af3bad3e-a46c-4c71-949a-fc6b245e7cee.mock.pstmn.io/ServiciosClubAlpha/api/Miembro/11184"), Charset.forName("UTF-8")));
 				//JSONArray json = new JSONArray(IOUtils.toString(new URL("https://a0d69c82-099e-457e-874b-7b6f98384cbc.mock.pstmn.io/alpha/obtenerCliente"), Charset.forName("UTF-8")));
 				int i=1;
 				int cont=0;
@@ -210,23 +237,27 @@ public class QuartzJob implements Job {
 						json2.put("idClienteGrupo", json.get("IDClienteGrupo"));
 						json2.put("urlfoto", json.get("UrlFoto"));
 						json2.put("fechaFinAcceso", json.get("FechaFinAcceso"));
+						
+						query="http://localhost:8080/alpha/agregarCliente";
+						url = new URL(query);
+			            conn = (HttpURLConnection) url.openConnection();
+			            String basicAuth = "Bearer "+ usuarioLog.get("token");
 
-						String query="http://localhost:8888/alpha/agregarCliente";
-						URL url = new URL(query);
-			            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			            conn.setRequestProperty ("Authorization", basicAuth);
+
 			            conn.setConnectTimeout(5000);
 			            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
 			            conn.setDoOutput(true);
 			            conn.setDoInput(true);
 			            conn.setRequestMethod("POST");
 
-			            OutputStream os = conn.getOutputStream();
+			            os = conn.getOutputStream();
 			            os.write(json2.toString().getBytes("UTF-8"));
 			            os.close();
 
 			            // read the response
-			            InputStream in = new BufferedInputStream(conn.getInputStream());
-			            String result = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
+			            in = new BufferedInputStream(conn.getInputStream());
+			            result = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
 			            JSONObject jsonObject = new JSONObject(result);
 			            System.out.println("Cliente("+jsonObject.get("idCliente")+"): "+jsonObject.get("nombre")+" guardado.");
 
