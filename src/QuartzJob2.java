@@ -57,8 +57,8 @@ public class QuartzJob2 implements Job {
 	        in.close();
 	        conn.disconnect();
 
-	        //query="http://192.168.20.26/ServiciosClubAlpha/api/Pagos/GetPedidoById";
-	        query="https://af3bad3e-a46c-4c71-949a-fc6b245e7cee.mock.pstmn.io/ServiciosClubAlpha/api/Pagos/GetPedidoById";
+	        query="http://192.168.20.26/ServiciosClubAlpha/api/Pagos/GetPedidoById";
+	        //query="https://af3bad3e-a46c-4c71-949a-fc6b245e7cee.mock.pstmn.io/ServiciosClubAlpha/api/Pagos/GetPedidoById";
 			while(true) {
 				try {
 					JSONObject json2=new JSONObject();
