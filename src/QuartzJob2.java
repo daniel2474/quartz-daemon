@@ -37,7 +37,7 @@ public class QuartzJob2 implements Job {
 			usuario.put("nombreUsuario","daniel2474");
 			usuario.put("password","farmacia123");
 			
-			String query="Http://localhost:8080/auth/login";
+			String query="Http://localhost:8888/auth/login";
 			URL url = new URL(query);
 		    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		    conn.setConnectTimeout(5000);
@@ -126,7 +126,7 @@ public class QuartzJob2 implements Job {
 				    
 				    
 
-				    String query2="http://localhost:8080/alpha/agregarPedido";
+				    String query2="http://localhost:8888/alpha/agregarPedido";
 					URL url2 = new URL(query2);
 		            HttpURLConnection conn2 = (HttpURLConnection) url2.openConnection();
 		            String basicAuth = "Bearer "+ usuarioLog.get("token");

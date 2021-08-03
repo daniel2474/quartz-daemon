@@ -32,12 +32,11 @@ public class QuartzJob implements Job {
 			try {
 				
 				JSONObject usuario=new JSONObject();
-				usuario.put("email","bloodgigametal@gmail.com");
-				usuario.put("nombre","daniel");
-				usuario.put("nombreUsuario","daniel2474");
-				usuario.put("password","farmacia123");
+				usuario.put("nombre","admin");
+				usuario.put("nombreUsuario","admin");
+				usuario.put("password","admin");
 				
-				String query="Http://localhost:8080/auth/login";
+				String query="Http://localhost:8888/auth/login";
 				URL url = new URL(query);
 			    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			    conn.setConnectTimeout(5000);
@@ -56,14 +55,37 @@ public class QuartzJob implements Job {
 			    JSONObject usuarioLog = new JSONObject(result);
 	            in.close();
 	            conn.disconnect();
+
+	            JSONObject token=new JSONObject();
+	            token.put("Token","77D5BDD4-1FEE-4A47-86A0-1E7D19EE1C74");
 				
-				JSONObject json = new JSONObject(IOUtils.toString(new URL("http://192.168.20.26/ServiciosClubAlpha/api/Miembro/1"), Charset.forName("UTF-8")));
+				query="http://192.168.20.26/ServiciosClubAlpha/api/Usuarios/GetUsuarios";
+				url = new URL(query);
+			    conn = (HttpURLConnection) url.openConnection();
+			    conn.setConnectTimeout(5000);
+			    conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+			    conn.setDoOutput(true);
+			    conn.setDoInput(true);
+			    conn.setRequestMethod("POST");
+
+			    os = conn.getOutputStream();
+			    os.write(token.toString().getBytes("UTF-8"));
+			    os.close();
+
+			    // read the response
+			    in = new BufferedInputStream(conn.getInputStream());
+			    result = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
+			    JSONArray miembros = new JSONArray(result);
+	            in.close();
+	            conn.disconnect();
+	            
 				//JSONObject json = new JSONObject(IOUtils.toString(new URL("https://af3bad3e-a46c-4c71-949a-fc6b245e7cee.mock.pstmn.io/ServiciosClubAlpha/api/Miembro/11184"), Charset.forName("UTF-8")));
 				//JSONArray json = new JSONArray(IOUtils.toString(new URL("https://a0d69c82-099e-457e-874b-7b6f98384cbc.mock.pstmn.io/alpha/obtenerCliente"), Charset.forName("UTF-8")));
-				int i=1;
-				int cont=0;
-				while(true) {
-					try { 
+				for(int i=0;i<miembros.length();i++) {
+					try {
+						
+						JSONObject json = new JSONObject(IOUtils.toString(new URL("http://192.168.20.26/ServiciosClubAlpha/api/Miembro/"+((JSONObject) miembros.get(i)).get("IDCliente")), Charset.forName("UTF-8")));
+						
 						System.out.println("Cliente: "+json.get("Nombre")+" leído.");
 						JSONObject json2 = new JSONObject();
 						JSONObject estatuscliente = new JSONObject();
@@ -237,8 +259,7 @@ public class QuartzJob implements Job {
 						json2.put("idClienteGrupo", json.get("IDClienteGrupo"));
 						json2.put("urlfoto", json.get("UrlFoto"));
 						json2.put("fechaFinAcceso", json.get("FechaFinAcceso"));
-						
-						query="http://localhost:8080/alpha/agregarCliente";
+						query="http://localhost:8888/alpha/agregarCliente";
 						url = new URL(query);
 			            conn = (HttpURLConnection) url.openConnection();
 			            String basicAuth = "Bearer "+ usuarioLog.get("token");
@@ -260,21 +281,11 @@ public class QuartzJob implements Job {
 			            result = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
 			            JSONObject jsonObject = new JSONObject(result);
 			            System.out.println("Cliente("+jsonObject.get("idCliente")+"): "+jsonObject.get("nombre")+" guardado.");
-
 			            in.close();
 			            conn.disconnect();
-			            i++;
-			            json = new JSONObject(IOUtils.toString(new URL("http://192.168.20.26/ServiciosClubAlpha/api/Miembro/"+i), Charset.forName("UTF-8")));
-			            cont=0;
 					}catch(FileNotFoundException ex) {
-						cont++;
-						if(cont>100)
-							break;
 					}catch(IOException e) {
-						cont++;
-						if(cont>100) {
-							break;
-						}
+						
 					}
 					
 				}
@@ -285,5 +296,4 @@ public class QuartzJob implements Job {
 				System.out.println();
 			}
 	}//cierre de metodo
-
 }//cierre de clase
