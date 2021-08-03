@@ -26,7 +26,6 @@ public class QuartzJob implements Job {
 	/**
 	 * Este metodo almacena en un JSONObject la respuesta del web service y este JSONObject es enviado al otro web service para ser almacenado
 	 */
-	
 	@Override
 	synchronized public void execute(JobExecutionContext arg0) throws JobExecutionException {
 			try {

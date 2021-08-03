@@ -26,17 +26,24 @@ public class QuartzMain {
 
 	public static void main(String[] args) throws SchedulerException {
 		JobDetail job=JobBuilder.newJob(QuartzJob.class).build();
-		//Trigger t1=TriggerBuilder.newTrigger().withIdentity("CronTrigger").withSchedule(CronScheduleBuilder.cronSchedule("0 0 23 1/1 * ? *")).build();
-		Trigger t1=TriggerBuilder.newTrigger().withIdentity("CronTrigger").withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInHours(3).repeatForever()).build();
+		Trigger t1=TriggerBuilder.newTrigger().withIdentity("CronTrigger").withSchedule(CronScheduleBuilder.cronSchedule("0 0 23 1/1 * ? *")).build();
+		//Trigger t1=TriggerBuilder.newTrigger().withIdentity("CronTrigger").withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInHours(3).repeatForever()).build();
 		Scheduler sc=StdSchedulerFactory.getDefaultScheduler();
 		sc.start();
 		sc.scheduleJob(job,t1);
 		JobDetail job2=JobBuilder.newJob(QuartzJob2.class).build();
 		Trigger t2=TriggerBuilder.newTrigger().withIdentity("Crontrigger").withSchedule(CronScheduleBuilder.cronSchedule("0 0/30 * 1/1 * ? *")).build();
 		//Trigger t2=TriggerBuilder.newTrigger().withIdentity("Crontrigger").withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInMinutes(30).repeatForever()).build();
-		//Scheduler sc2=StdSchedulerFactory.getDefaultScheduler(); 
-		//sc2.start();
-		//sc2.scheduleJob(job2,t2);
+		Scheduler sc2=StdSchedulerFactory.getDefaultScheduler(); 
+		sc2.start();
+		sc2.scheduleJob(job2,t2);
+		
+		JobDetail job3=JobBuilder.newJob(QuartzJob3.class).build();
+		Trigger t3=TriggerBuilder.newTrigger().withIdentity("crontrigger").withSchedule(CronScheduleBuilder.cronSchedule("0 0/30 * 1/1 * ? *")).build();
+		//Trigger t3=TriggerBuilder.newTrigger().withIdentity("crontrigger").withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInMinutes(30).repeatForever()).build();
+		Scheduler sc3=StdSchedulerFactory.getDefaultScheduler(); 
+		sc3.start();
+		sc3.scheduleJob(job3,t3);
 	}// fin del metodo
 
 }
