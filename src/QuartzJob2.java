@@ -15,7 +15,8 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * Esta clase se conecta con el web service de alpha y extrae informacion de todos los pedidos de los clientes uno por uno y guarda esta informacion en una base de datos por medio de otro web service
+ * Esta clase se conecta con el web service de alpha y extrae informacion de todos los pedidos de los clientes uno por uno y
+ * guarda esta informacion en una base de datos por medio de otro web service
  * En caso de error genera un JobExecutionException
  * @author: Daniel García Velasco y Abimael Rueda Galindo
  * @version: 9/07/2021
@@ -31,13 +32,13 @@ public class QuartzJob2 implements Job {
 	synchronized public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		try {
 			int i=0,cont=0;
+			JSONObject archivo=Archivo.inicializar();
 			JSONObject usuario=new JSONObject();
-			usuario.put("email","bloodgigametal@gmail.com");
-			usuario.put("nombre","daniel");
-			usuario.put("nombreUsuario","daniel2474");
-			usuario.put("password","farmacia123");
-			
-			String query="Http://localhost:8888/auth/login";
+			usuario.put("nombre",archivo.get("nombre"));
+			usuario.put("nombreUsuario",archivo.get("nombreUsuario"));
+			usuario.put("password",archivo.get("password"));
+
+			String query=archivo.getString("login");
 			URL url = new URL(query);
 		    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		    conn.setConnectTimeout(5000);
@@ -57,13 +58,13 @@ public class QuartzJob2 implements Job {
 	        in.close();
 	        conn.disconnect();
 
-	        query="http://192.168.20.26/ServiciosClubAlpha/api/Pagos/GetPedidoById";
+	        query=archivo.getString("getPedidoById");
 	        //query="https://af3bad3e-a46c-4c71-949a-fc6b245e7cee.mock.pstmn.io/ServiciosClubAlpha/api/Pagos/GetPedidoById";
 			while(true) {
 				try {
 					JSONObject json2=new JSONObject();
 					json2.put("NoPedido",i);
-					json2.put("Token","77D5BDD4-1FEE-4A47-86A0-1E7D19EE1C74");
+					json2.put("Token",archivo.get("Token"));
 					url = new URL(query);
 				    conn = (HttpURLConnection) url.openConnection();
 				    conn.setConnectTimeout(5000);
@@ -126,7 +127,7 @@ public class QuartzJob2 implements Job {
 				    
 				    
 
-				    String query2="http://localhost:8888/alpha/agregarPedido";
+				    String query2=archivo.getString("agregarPedido");
 					URL url2 = new URL(query2);
 		            HttpURLConnection conn2 = (HttpURLConnection) url2.openConnection();
 		            String basicAuth = "Bearer "+ usuarioLog.get("token");
@@ -145,8 +146,6 @@ public class QuartzJob2 implements Job {
 		            // read the response
 		            InputStream in2 = new BufferedInputStream(conn2.getInputStream());
 		            String result2 = org.apache.commons.io.IOUtils.toString(in2, "UTF-8");
-		            JSONObject jsonObject2 = new JSONObject(result2);
-		            System.out.println(jsonObject2);
 
 		            in2.close();
 		            conn2.disconnect();

@@ -29,13 +29,14 @@ public class QuartzJob implements Job {
 	@Override
 	synchronized public void execute(JobExecutionContext arg0) throws JobExecutionException {
 			try {
-				
+				JSONObject archivo=Archivo.inicializar();
 				JSONObject usuario=new JSONObject();
-				usuario.put("nombre","admin");
-				usuario.put("nombreUsuario","admin");
-				usuario.put("password","admin");
+				usuario.put("nombre",archivo.get("nombre"));
+				usuario.put("nombreUsuario",archivo.get("nombreUsuario"));
+				usuario.put("password",archivo.get("password"));
+
 				
-				String query="Http://localhost:8888/auth/login";
+				String query=archivo.getString("login");
 				URL url = new URL(query);
 			    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			    conn.setConnectTimeout(5000);
@@ -56,9 +57,9 @@ public class QuartzJob implements Job {
 	            conn.disconnect();
 
 	            JSONObject token=new JSONObject();
-	            token.put("Token","77D5BDD4-1FEE-4A47-86A0-1E7D19EE1C74");
+	            token.put("Token",archivo.get("Token"));
 				
-				query="http://192.168.20.26/ServiciosClubAlpha/api/Usuarios/GetUsuarios";
+				query=archivo.getString("getUsuarios");
 				url = new URL(query);
 			    conn = (HttpURLConnection) url.openConnection();
 			    conn.setConnectTimeout(5000);
@@ -85,7 +86,6 @@ public class QuartzJob implements Job {
 						
 						JSONObject json = new JSONObject(IOUtils.toString(new URL("http://192.168.20.26/ServiciosClubAlpha/api/Miembro/"+((JSONObject) miembros.get(i)).get("IDCliente")), Charset.forName("UTF-8")));
 						
-						System.out.println("Cliente: "+json.get("Nombre")+" leído.");
 						JSONObject json2 = new JSONObject();
 						JSONObject estatuscliente = new JSONObject();
 						JSONObject lunes = new JSONObject();
@@ -258,7 +258,7 @@ public class QuartzJob implements Job {
 						json2.put("idClienteGrupo", json.get("IDClienteGrupo"));
 						json2.put("urlfoto", json.get("UrlFoto"));
 						json2.put("fechaFinAcceso", json.get("FechaFinAcceso"));
-						query="http://localhost:8888/alpha/agregarCliente";
+						query=archivo.getString("agregarCliente");
 						url = new URL(query);
 			            conn = (HttpURLConnection) url.openConnection();
 			            String basicAuth = "Bearer "+ usuarioLog.get("token");
@@ -279,7 +279,6 @@ public class QuartzJob implements Job {
 			            in = new BufferedInputStream(conn.getInputStream());
 			            result = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
 			            JSONObject jsonObject = new JSONObject(result);
-			            System.out.println("Cliente("+jsonObject.get("idCliente")+"): "+jsonObject.get("nombre")+" guardado.");
 			            in.close();
 			            conn.disconnect();
 					}catch(FileNotFoundException ex) {
@@ -292,7 +291,6 @@ public class QuartzJob implements Job {
 				
 			}catch(Exception e){
 				e.printStackTrace();
-				System.out.println();
 			}
 	}//cierre de metodo
 }//cierre de clase

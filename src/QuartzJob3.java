@@ -5,29 +5,33 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-
+/**Este job se encarga de conectarse con el web service para agregar usuarios nuevos a la base de datos por medio de otro web service
+ * 
+ * @author Daniel García Velasco y Abimael Galindo Rueda
+ *
+ */
 public class QuartzJob3 implements Job {
-
+	/**
+	 * En este metodo se hace login para obtener un token y asi poder utilizar el web service de addUsers
+	 */
 	@Override
 	synchronized public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		try {
 			
+			JSONObject archivo=Archivo.inicializar();
 			JSONObject usuario=new JSONObject();
-			usuario.put("nombre","admin");
-			usuario.put("nombreUsuario","admin");
-			usuario.put("password","admin");
+			usuario.put("nombre",archivo.get("nombre"));
+			usuario.put("nombreUsuario",archivo.get("nombreUsuario"));
+			usuario.put("password",archivo.get("password"));
 			
-			String query="Http://localhost:8888/auth/login";
+			String query=(String) archivo.get("login");
 			URL url = new URL(query);
 		    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		    conn.setConnectTimeout(5000);
@@ -46,7 +50,7 @@ public class QuartzJob3 implements Job {
 		    JSONObject usuarioLog = new JSONObject(result);
             in.close();
             conn.disconnect();
-            query="http://localhost:8888/api/addUsers";
+            query=archivo.getString("addUsers");
 			url = new URL(query);
             conn = (HttpURLConnection) url.openConnection();
             String basicAuth = "Bearer "+ usuarioLog.get("token");
@@ -69,6 +73,6 @@ public class QuartzJob3 implements Job {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-	}
+	}//Fin del metodo
 
-}
+}//Fin de la clase
