@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Sat Oct 30 23:47:44 CDT 2021
+onejar.license.required=true
+manifest.mergeall=true
+manifest.removesigners=true
+excludes=
+includes=
+onejar.checkbox=false
+onejar.expand=
+manifest.classpath=
+jarname=QuartzExamples_fat.jar
+jarname.isextern=false
+manifest.file=<createnew>
+manifest.mainclass=com.pack.QuartzMain

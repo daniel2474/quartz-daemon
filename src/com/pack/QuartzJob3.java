@@ -1,3 +1,5 @@
+package com.pack;
+
 import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,7 +16,7 @@ import org.quartz.JobExecutionException;
 
 /**Este job se encarga de conectarse con el web service para agregar usuarios nuevos a la base de datos por medio de otro web service
  * 
- * @author Daniel García Velasco y Abimael Galindo Rueda
+ * @author Daniel Garcï¿½a Velasco y Abimael Galindo Rueda
  *
  */
 public class QuartzJob3 implements Job {

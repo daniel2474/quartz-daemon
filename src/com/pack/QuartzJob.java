@@ -1,11 +1,15 @@
+package com.pack;
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Date;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -17,7 +21,7 @@ import org.quartz.JobExecutionException;
 /**
  * Esta clase se conecta con el web service de alpha y extrae informacion de todos los clientes uno por uno y guarda esta informacion en una base de datos por medio de otro web service
  * En caso de error genera un JobExecutionException
- * @author: Daniel García Velasco y Abimael Rueda Galindo
+ * @author: Daniel Garcï¿½a Velasco y Abimael Rueda Galindo
  * @version: 9/07/2021
  */
 
@@ -83,8 +87,27 @@ public class QuartzJob implements Job {
 				//JSONArray json = new JSONArray(IOUtils.toString(new URL("https://a0d69c82-099e-457e-874b-7b6f98384cbc.mock.pstmn.io/alpha/obtenerCliente"), Charset.forName("UTF-8")));
 				for(int i=0;i<miembros.length();i++) {
 					try {
+						query="http://192.168.20.102:8090/alpha/updateCliente/"+((JSONObject) miembros.get(i)).get("IDCliente");
+						url = new URL(query);
+					     conn = (HttpURLConnection) url.openConnection();
+					     String basicAuth = "Bearer "+ usuarioLog.get("token");
+				        conn.setRequestProperty ("Authorization", basicAuth);
+				        
+				        conn.setRequestProperty("Content-Type","application/json");
+				        conn.setRequestMethod("GET");
+				        BufferedReader inn = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				        String output;
+
+				        StringBuffer response = new StringBuffer();
+				        while ((output = inn.readLine()) != null) {
+				            response.append(output);
+				        }
+
+				        inn.close();
+				        // printing result from response
+
 						
-						JSONObject json = new JSONObject(IOUtils.toString(new URL("http://192.168.20.26/ServiciosClubAlpha/api/Miembro/"+((JSONObject) miembros.get(i)).get("IDCliente")), Charset.forName("UTF-8")));
+						/*JSONObject json = new JSONObject(IOUtils.toString(new URL("http://192.168.20.47/ServiciosClubAlpha/api/Miembro/"+((JSONObject) miembros.get(i)).get("IDCliente")), Charset.forName("UTF-8")));
 						
 						JSONObject json2 = new JSONObject();
 						JSONObject estatuscliente = new JSONObject();
@@ -190,8 +213,8 @@ public class QuartzJob implements Job {
 							martes2.put("horaentrada",((JSONObject) ((JSONObject) ((JSONObject) ((JSONObject) otroClubAux.get(i1)).get("HorarioAcceso")).get("Horario")).get("Martes")).get("HoraEntrada"));
 							martes2.put("horasalida", ((JSONObject) ((JSONObject) ((JSONObject) ((JSONObject) otroClubAux.get(i1)).get("HorarioAcceso")).get("Horario")).get("Martes")).get("HoraSalida"));
 							
-							miercoles2.put("horaentrada",((JSONObject) ((JSONObject) ((JSONObject) ((JSONObject) otroClubAux.get(i1)).get("HorarioAcceso")).get("Horario")).get("Miércoles")).get("HoraEntrada"));
-							miercoles2.put("horasalida", ((JSONObject) ((JSONObject) ((JSONObject) ((JSONObject) otroClubAux.get(i1)).get("HorarioAcceso")).get("Horario")).get("Miércoles")).get("HoraSalida"));
+							miercoles2.put("horaentrada",((JSONObject) ((JSONObject) ((JSONObject) ((JSONObject) otroClubAux.get(i1)).get("HorarioAcceso")).get("Horario")).get("MiÃ©rcoles")).get("HoraEntrada"));
+							miercoles2.put("horasalida", ((JSONObject) ((JSONObject) ((JSONObject) ((JSONObject) otroClubAux.get(i1)).get("HorarioAcceso")).get("Horario")).get("MiÃ©rcoles")).get("HoraSalida"));
 							
 							jueves2.put("horaentrada",((JSONObject) ((JSONObject) ((JSONObject) ((JSONObject) otroClubAux.get(i1)).get("HorarioAcceso")).get("Horario")).get("Jueves")).get("HoraEntrada"));
 							jueves2.put("horasalida", ((JSONObject) ((JSONObject) ((JSONObject) ((JSONObject) otroClubAux.get(i1)).get("HorarioAcceso")).get("Horario")).get("Jueves")).get("HoraSalida"));
@@ -199,8 +222,8 @@ public class QuartzJob implements Job {
 							viernes2.put("horaentrada",((JSONObject) ((JSONObject) ((JSONObject) ((JSONObject) otroClubAux.get(i1)).get("HorarioAcceso")).get("Horario")).get("Viernes")).get("HoraEntrada"));
 							viernes2.put("horasalida", ((JSONObject) ((JSONObject) ((JSONObject) ((JSONObject) otroClubAux.get(i1)).get("HorarioAcceso")).get("Horario")).get("Viernes")).get("HoraSalida"));
 							
-							sabado2.put("horaentrada",((JSONObject) ((JSONObject) ((JSONObject) ((JSONObject) otroClubAux.get(i1)).get("HorarioAcceso")).get("Horario")).get("Sábado")).get("HoraEntrada"));
-							sabado2.put("horasalida", ((JSONObject) ((JSONObject) ((JSONObject) ((JSONObject) otroClubAux.get(i1)).get("HorarioAcceso")).get("Horario")).get("Sábado")).get("HoraSalida"));
+							sabado2.put("horaentrada",((JSONObject) ((JSONObject) ((JSONObject) ((JSONObject) otroClubAux.get(i1)).get("HorarioAcceso")).get("Horario")).get("SÃ¡bado")).get("HoraEntrada"));
+							sabado2.put("horasalida", ((JSONObject) ((JSONObject) ((JSONObject) ((JSONObject) otroClubAux.get(i1)).get("HorarioAcceso")).get("Horario")).get("SÃ¡bado")).get("HoraSalida"));
 						
 							horario2.put("idLunes", lunes2);
 							horario2.put("idMartes", martes2);
@@ -278,19 +301,21 @@ public class QuartzJob implements Job {
 			            // read the response
 			            in = new BufferedInputStream(conn.getInputStream());
 			            result = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
-			            JSONObject jsonObject = new JSONObject(result);
 			            in.close();
-			            conn.disconnect();
+			            conn.disconnect();*/
 					}catch(FileNotFoundException ex) {
+						ex.printStackTrace();
 					}catch(IOException e) {
-						
+
+						e.printStackTrace();
 					}
 					
 				}
-				System.out.println("Fin");
+				System.out.println("Fin actualizar usuarios "+ new Date());
 				
 			}catch(Exception e){
 				e.printStackTrace();
 			}
 	}//cierre de metodo
 }//cierre de clase
+

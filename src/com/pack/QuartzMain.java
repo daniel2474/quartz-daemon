@@ -1,3 +1,4 @@
+package com.pack;
 
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
@@ -34,26 +35,33 @@ public class QuartzMain {
 		sc.start();
 		sc.scheduleJob(job,t1);
 		
-		JobDetail job2=JobBuilder.newJob(QuartzJob2.class).build();
-		Trigger t2=TriggerBuilder.newTrigger().withIdentity("Crontrigger").withSchedule(CronScheduleBuilder.cronSchedule("0 0/30 * 1/1 * ? *")).build();
+		//JobDetail job2=JobBuilder.newJob(QuartzJob2.class).build();
+		//Trigger t2=TriggerBuilder.newTrigger().withIdentity("Crontrigger").withSchedule(CronScheduleBuilder.cronSchedule("0 0/30 * 1/1 * ? *")).build();
 		//Trigger t2=TriggerBuilder.newTrigger().withIdentity("Crontrigger").withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInMinutes(30).repeatForever()).build();
-		Scheduler sc2=StdSchedulerFactory.getDefaultScheduler(); 
-		sc2.start();
-		sc2.scheduleJob(job2,t2);
+		//Scheduler sc2=StdSchedulerFactory.getDefaultScheduler(); 
+		//sc2.start();
+		//sc2.scheduleJob(job2,t2);
 		
-		JobDetail job3=JobBuilder.newJob(QuartzJob3.class).build();
-		Trigger t3=TriggerBuilder.newTrigger().withIdentity("crontrigger").withSchedule(CronScheduleBuilder.cronSchedule("0 0/30 * 1/1 * ? *")).build();
+		//JobDetail job3=JobBuilder.newJob(QuartzJob3.class).build();
+		//Trigger t3=TriggerBuilder.newTrigger().withIdentity("crontrigger").withSchedule(CronScheduleBuilder.cronSchedule("0 0 23 1/1 * ? *")).build();
 		//Trigger t3=TriggerBuilder.newTrigger().withIdentity("crontrigger").withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInMinutes(30).repeatForever()).build();
-		Scheduler sc3=StdSchedulerFactory.getDefaultScheduler(); 
-		sc3.start();
-		sc3.scheduleJob(job3,t3);
+		//Scheduler sc3=StdSchedulerFactory.getDefaultScheduler(); 
+		//sc3.start();
+		//sc3.scheduleJob(job3,t3);
 		
 		JobDetail job4=JobBuilder.newJob(QuartzJob4.class).build();
-		Trigger t4=TriggerBuilder.newTrigger().withIdentity("crontriggeR").withSchedule(CronScheduleBuilder.cronSchedule("0 0/30 * 1/1 * ? *")).build();
+		Trigger t4=TriggerBuilder.newTrigger().withIdentity("crontriggeR").withSchedule(CronScheduleBuilder.cronSchedule("0 0 23 1/1 * ? *")).build();
 		//Trigger t4=TriggerBuilder.newTrigger().withIdentity("crontriggeR").withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInMinutes(30).repeatForever()).build();
 		Scheduler sc4=StdSchedulerFactory.getDefaultScheduler(); 
 		sc4.start();
 		sc4.scheduleJob(job4,t4);
+		
+		//JobDetail job5=JobBuilder.newJob(QuartzJob5.class).build();
+		//Trigger t5=TriggerBuilder.newTrigger().withIdentity("crontriggeR").withSchedule(CronScheduleBuilder.cronSchedule("0 0/30 * 1/1 * ? *")).build();
+		//Trigger t5=TriggerBuilder.newTrigger().withIdentity("crontriggeR").withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInMinutes(60).repeatForever()).build();
+		//Scheduler sc5=StdSchedulerFactory.getDefaultScheduler(); 
+		//sc5.start();
+		//sc5.scheduleJob(job5,t5);
 	}// fin del metodo
 
 }

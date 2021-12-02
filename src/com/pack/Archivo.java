@@ -1,3 +1,4 @@
+package com.pack;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,8 +21,8 @@ public  class Archivo {
 		try {
 			JSONObject application=new JSONObject();
 			String cadena;
-	        FileReader f = new FileReader("src\\application.properties");
-	        BufferedReader b = new BufferedReader(f);
+	        FileReader f = new FileReader("application.properties"); 
+	         BufferedReader b = new BufferedReader(f);
 	        while((cadena = b.readLine())!=null) {
 	            String[]c=cadena.split("=");
 	            application.put(c[0], c[1]);
