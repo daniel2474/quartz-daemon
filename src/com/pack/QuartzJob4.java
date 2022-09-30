@@ -101,7 +101,6 @@ public class QuartzJob4 implements Job {
             	if(i!=4) {
             		body2.put("idClub",i);
                     body2.put("mes",valor);
-        			
                     url = new URL(query);
                     conn = (HttpURLConnection) url.openConnection();
                     basicAuth = "Bearer "+ usuarioLog.get("token");
